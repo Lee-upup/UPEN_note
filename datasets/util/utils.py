@@ -117,7 +117,7 @@ def depth_to_3D(depth_obs, img_size, xs, ys, inv_K):
     # Unproject
     # negate depth as the camera looks along -Z
     # SPEEDUP - create ones in constructor
-    xys = torch.vstack((torch.mul(xs, depth) , torch.mul(ys, depth), -depth, torch.ones(depth.shape, device='cuda'))) # 4 x 128 x 128
+    xys = torch.vstack((torch.mul(xs, depth) , torch.mul(ys, depth), -depth, torch.ones(depth.shape, device='cuda'))) # 4 x 256 x 256
     xys = xys.reshape(4, -1)
     xy_c0 = torch.matmul(inv_K, xys)
 

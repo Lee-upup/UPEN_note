@@ -19,16 +19,18 @@ def get_acc_proj_grid(ego_grid_sseg, pose, abs_pose, crop_size, cell_size):
 
 def est_occ_from_depth(local3D, grid_dim, cell_size, device, occupancy_height_thresh=-0.9):
 
+    # ego_grid_occ size [1, 3, 768, 768]
     ego_grid_occ = torch.zeros((len(local3D), 3, grid_dim[0], grid_dim[1]), dtype=torch.float32, device=device)
 
     for k in range(len(local3D)):
-
+        # local3D size 65536x3
         local3D_step = local3D[k]
 
         # Keep points for which z < 3m (to ensure reliable projection)
         # and points for which z > 0.5m (to avoid having artifacts right in-front of the robot)
         z = -local3D_step[:,2]
         # avoid adding points from the ceiling, threshold on y axis, y range is roughly [-1...2.5]
+        # 滤掉一部分天花板上的点
         y = local3D_step[:,1]
         local3D_step = local3D_step[(z < 3) & (z > 0.5) & (y < 1), :]
 
@@ -40,7 +42,7 @@ def est_occ_from_depth(local3D, grid_dim, cell_size, device, occupancy_height_th
         y = local3D_step[:,1]
         occ_lbl[y>thresh,:] = 1
         occ_lbl[y<=thresh,:] = 2
-
+        # 将local3D_step中的（x，z）坐标转化成对应的二维地图坐标（整数）
         map_coords = discretize_coords(x=local3D_step[:,0], z=local3D_step[:,2], grid_dim=grid_dim, cell_size=cell_size)
 
         ## Replicate label pooling

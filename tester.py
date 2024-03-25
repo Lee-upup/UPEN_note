@@ -79,7 +79,7 @@ class NavTester(object):
             self.models_dict[n]["predictor_model"].eval()
 
         self.step_count = 0
-
+        #用于存储不同类型的指标的列表    
         self.map_metrics = ['map_accuracy', 'map_accuracy_m2', 'iou', 'f1', 'cov', 'cov_per']
         self.metrics = ['distance_to_goal', 'success', 'spl', 'softspl']
         self.diff_list = ['easy', 'medium', 'hard']
@@ -125,6 +125,10 @@ class NavTester(object):
                 observations = self.test_ds.sim._sensor_suite.get_observations(sim_obs)
 
                 # For each episode we need a new instance of a fresh global grid
+                # test_ds.grid_dim = (768,768)
+                # test_ds.crop_size = (160,160)
+                # test_ds.cell_size = 0.05
+                # test_ds.spatial_labels = 3 free occ ukn
                 sg = SemanticGrid(1, self.test_ds.grid_dim, self.test_ds.crop_size[0], self.test_ds.cell_size,
                                                 spatial_labels=self.test_ds.spatial_labels, ensemble_size=self.options.ensemble_size)
 
@@ -168,12 +172,18 @@ class NavTester(object):
                 while t < self.options.max_steps:
 
                     img = observations['rgb'][:,:,:3]
+                    # test_ds.img_size = 256x256
                     depth = observations['depth'].reshape(self.test_ds.img_size[0], self.test_ds.img_size[1], 1)
 
+                    # cfg_norm_depth = true
+                    # 对深度图进行反归一化 原先深度图里面的数值介于0-1，不是真实距离
+                    # test_ds.min_depth = 0， test_ds.max_depth = 10
                     if self.test_ds.cfg_norm_depth:
+                        # depth_abs size: 256x256x1
                         depth_abs = utils.unnormalize_depth(depth.clone(), min=self.test_ds.min_depth, max=self.test_ds.max_depth)
 
                     # 3d info
+                    # local3D_step size (256x256 = 65536, 3)
                     local3D_step = utils.depth_to_3D(depth_abs, self.test_ds.img_size, self.test_ds.xs, self.test_ds.ys, self.test_ds.inv_K)
 
                     agent_pose, y_height = utils.get_sim_location(agent_state=self.test_ds.sim.get_agent_state())
