@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": 
+            ["--name", "test_pointnav_exp",
+            "--scenes_lis", "2azQ1b91cZZ",
+            "--gpu_capacity", "1",
+            "--with_rrt_planning", 
+            "--test_set", "v2",
+            // "--exploration",
+            "--max_steps", "1000"],
+
+            // ["--gpu_capacity", "1",
+            // "--scenes_list", "pLe4wQe7qrG",
+            // "--episode_len", "10"],
+
+            // ["--name", "train_map_pred_0",
+            // "--is_train"],
+
+
+        }
+    ]
+}
