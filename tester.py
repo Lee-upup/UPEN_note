@@ -230,6 +230,8 @@ class NavTester(object):
                             pose_coords_noisy_list.append(pose_coords.clone().cpu().numpy())                
 
                     # do ground-projection, update the map
+                    # ego_grid_sseg_3 shape: torch.Size([1, 3, 768, 768])
+                    # 将深度图数据转为具有occ free ukn标签的二维坐标
                     ego_grid_sseg_3 = map_utils.est_occ_from_depth([local3D_step], grid_dim=self.test_ds.grid_dim, cell_size=self.test_ds.cell_size, 
                                                                                     device=self.device, occupancy_height_thresh=self.options.occupancy_height_thresh)
 
@@ -557,13 +559,16 @@ class NavTester(object):
         return self.l_policy.plan(depth, point_goal_with_gps_compass, step)
 
     def run_map_predictor(self, step_ego_grid_crops):
-
+        # unsqueeze(0) 的作用是在第0维度（即批次维度）上增加一个维度
+        # step_ego_grid_crops [1, 3, 160, 160] 增加一个纬度 > [1, 1, 3, 160, 160] 代表 (B, T, C, H, W)
+        # Batch , Time step , class , height , width
         input_batch = {'step_ego_grid_crops_spatial': step_ego_grid_crops.unsqueeze(0)}
         input_batch = {k: v.to(self.device) for k, v in input_batch.items()}
 
         model_pred_output = {}
         ensemble_spatial_maps = []
         for n in range(self.options.ensemble_size):
+            # model_pred_output torch.Size([1, 1, 3, 160, 160])
             model_pred_output[n] = self.models_dict[n]['predictor_model'](input_batch)
             ensemble_spatial_maps.append(model_pred_output[n]['pred_maps_spatial'].clone())
         ensemble_spatial_maps = torch.stack(ensemble_spatial_maps) # N x B x T x C x cH x cW

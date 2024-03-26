@@ -38,6 +38,7 @@ def est_occ_from_depth(local3D, grid_dim, cell_size, device, occupancy_height_th
         occ_lbl = torch.zeros((local3D_step.shape[0], 1), dtype=torch.float32, device=device)
 
         # threshold height to get occupancy and free labels
+        # 代表是否占据的标签
         thresh = occupancy_height_thresh
         y = local3D_step[:,1]
         occ_lbl[y>thresh,:] = 1
@@ -45,7 +46,7 @@ def est_occ_from_depth(local3D, grid_dim, cell_size, device, occupancy_height_th
         # 将local3D_step中的（x，z）坐标转化成对应的二维地图坐标（整数）
         map_coords = discretize_coords(x=local3D_step[:,0], z=local3D_step[:,2], grid_dim=grid_dim, cell_size=cell_size)
 
-        ## Replicate label pooling
+        # Replicate label pooling
         grid = torch.empty(3, grid_dim[0], grid_dim[1], device=device)
         grid[:] = 1 / 3
 
@@ -53,12 +54,17 @@ def est_occ_from_depth(local3D, grid_dim, cell_size, device, occupancy_height_th
         if map_coords.shape[0]==0:
             ego_grid_occ[k,:,:,:] = grid.unsqueeze(0)
             continue
-
+        # 将二维坐标和标签对应
         concatenated = torch.cat([map_coords, occ_lbl.long()], dim=-1)
+        # 删去重复值
         unique_values, counts = torch.unique(concatenated, dim=0, return_counts=True)
+        # grid分为三层二维矩阵, 按照unique_values中的数据,对应到grid中,将count赋值给grid
         grid[unique_values[:, 2], unique_values[:, 1], unique_values[:, 0]] = counts + 1e-5
-
+        # 对grid里所有的count.除以count的总数,即归一
+        # grid 里每个格子初值 = 0.33,代表occ free ukn的占据概率,加入count之后,占据概率发生变化,count多的概率大
         ego_grid_occ[k,:,:,:] = grid / grid.sum(dim=0)
+        # sum 的 torch.Size([768, 768])
+        sum = grid.sum(dim=0)
 
     return ego_grid_occ
 

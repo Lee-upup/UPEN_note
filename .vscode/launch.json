@@ -13,6 +13,7 @@
             "--gpu_capacity", "1",
             "--with_rrt_planning", 
             "--test_set", "v2",
+            "--save_nav_images",
             // "--exploration",
             "--max_steps", "1000"],
 
