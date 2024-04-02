@@ -116,7 +116,7 @@ class BaseTrainer(object):
             # setup the next epoch inside of train_data_loader
             # this will include the next dataset permutation
             train_data_loader.next_epoch(self.checkpoint)
-
+            print(len(self.train_ds))
             for step, batch in enumerate(tqdm(train_data_loader, desc='Epoch '+str(epoch),
                                               total=len(self.train_ds) // self.options.batch_size,
                                               initial=train_data_loader.checkpoint_batch_idx),

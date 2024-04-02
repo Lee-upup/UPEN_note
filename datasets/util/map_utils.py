@@ -7,7 +7,8 @@ from models.semantic_grid import SemanticGrid
 def get_acc_proj_grid(ego_grid_sseg, pose, abs_pose, crop_size, cell_size):
     grid_dim = (ego_grid_sseg.shape[2], ego_grid_sseg.shape[3])
     # sg.sem_grid will hold the accumulated semantic map at the end of the episode (i.e. 1 map per episode)
-    sg = SemanticGrid(1, grid_dim, crop_size[0], cell_size, spatial_labels=ego_grid_sseg.shape[1], object_labels=ego_grid_sseg.shape[1], ensemble_size=1)
+    # sg = SemanticGrid(1, grid_dim, crop_size[0], cell_size, spatial_labels=ego_grid_sseg.shape[1], object_labels=ego_grid_sseg.shape[1], ensemble_size=1)
+    sg = SemanticGrid(1, grid_dim, crop_size[0], cell_size, spatial_labels=ego_grid_sseg.shape[1], ensemble_size=1)
     # Transform the ground projected egocentric grids to geocentric using relative pose
     geo_grid_sseg = sg.spatialTransformer(grid=ego_grid_sseg, pose=pose, abs_pose=abs_pose)
     # step_geo_grid contains the map snapshot every time a new observation is added

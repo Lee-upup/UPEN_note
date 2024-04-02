@@ -90,13 +90,13 @@ class HabitatDataScene(Dataset):
         self.sim = habitat.sims.make_sim("Sim-v0", config=cfg.SIMULATOR)
         
         # Load pose noise models from Neural SLAM
-        if options.noisy_pose:
-            self.sensor_noise_fwd = \
-                    pickle.load(open("noise_models/sensor_noise_fwd.pkl", 'rb'))
-            self.sensor_noise_right = \
-                    pickle.load(open("noise_models/sensor_noise_right.pkl", 'rb'))
-            self.sensor_noise_left = \
-                    pickle.load(open("noise_models/sensor_noise_left.pkl", 'rb'))
+        # if options.noisy_pose:
+        #     self.sensor_noise_fwd = \
+        #             pickle.load(open("noise_models/sensor_noise_fwd.pkl", 'rb'))
+        #     self.sensor_noise_right = \
+        #             pickle.load(open("noise_models/sensor_noise_right.pkl", 'rb'))
+        #     self.sensor_noise_left = \
+        #             pickle.load(open("noise_models/sensor_noise_left.pkl", 'rb'))
 
         seed = 0
         self.sim.seed(seed)
@@ -208,9 +208,9 @@ class HabitatDataScene(Dataset):
         episode = self.scene_data['episodes'][idx]
 
         len_shortest_path = len(episode['shortest_paths'][0])
-        objectgoal = episode['object_category']
+        # objectgoal = episode['object_category']
 
-        if len_shortest_path > 50: # skip that episode to avoid memory issues
+        if len_shortest_path > 500: # skip that episode to avoid memory issues
             return None
         if len_shortest_path < self.episode_len+1:
             return None

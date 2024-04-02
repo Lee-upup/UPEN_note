@@ -159,7 +159,8 @@ class TrainOptions(BaseOptions):
 
         self.parser.add_argument('--stored_episodes_dir', type=str, dest='stored_episodes_dir', 
                                 # default='/home/lzz/habitat-lab/data/scene_datasets/mp3d_pointnav_episodes_tmp/')
-                                default='/home/lzz/UPEN/logs/train_map_pred_0/')
+                                # default='/home/lzz/UPEN/logs/train_map_pred_0/')
+                                default='/home/lzz/habitat-lab/data/scene_datasets/mp3d_pointnav_episodes_tmp/')
 
         
         self.parser.add_argument('--split', type=str, dest='split', default='val',

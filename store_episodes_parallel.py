@@ -41,14 +41,14 @@ class Params(object):
 
         self.parser.add_argument('--scenes_list', nargs='+')
 
-        self.parser.add_argument('--root_path', type=str, dest='root_path', default="/")
+        self.parser.add_argument('--root_path', type=str, dest='root_path', default="/home/lzz/")
         
-        self.parser.add_argument('--episodes_path', type=str, dest='episodes_path', default="habitat-api/data/datasets/objectnav/mp3d/",
+        self.parser.add_argument('--episodes_path', type=str, dest='episodes_path', default="habitat-lab/data/datasets/pointnav/mp3d/",
                                 help='we use the episodes from the objectnav task to select start locations')
-        self.parser.add_argument('--ep_set', type=str, dest='ep_set', default='v1')
+        self.parser.add_argument('--ep_set', type=str, dest='ep_set', default='v2')
         self.parser.add_argument('--episodes_root', type=str, dest='episodes_root', default="")
         
-        self.parser.add_argument('--scenes_dir', type=str, dest='scenes_dir', default='habitat-api/data/scene_datasets/')
+        self.parser.add_argument('--scenes_dir', type=str, dest='scenes_dir', default='habitat-lab/data/scene_datasets/')
         self.parser.add_argument('--episodes_save_dir', type=str, dest='episodes_save_dir', default="mp3d_pointnav_episodes_tmp/")
 
         self.parser.add_argument('--gpu_capacity', type=int, dest='gpu_capacity', default=2)
@@ -76,9 +76,11 @@ def store_episodes(options, config_file, scene_id):
         ex = data[i]
 
         if ep_count >= options.max_num_episodes:
+            print("ep_count >= options.max_num_episodes")
             break
 
         if ex is None:
+            print("ex is None")
             continue
 
         ep_count+=1

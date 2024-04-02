@@ -22,7 +22,7 @@ class Params(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser()
 
-        self.parser.add_argument('--split', type=str, dest='split', default='val',
+        self.parser.add_argument('--split', type=str, dest='split', default='train',
                                  choices=['train', 'val', 'test'])
 
         self.parser.add_argument('--turn_angle', type=int, dest='turn_angle', default=10)
@@ -54,10 +54,10 @@ class Params(object):
                                  help='reject generated episode with less number of steps')
 
         self.parser.add_argument('--config_file', type=str, dest='config_file',
-                                default='configs/my_pointnav_mp3d_val.yaml',
+                                default='configs/my_pointnav_mp3d_train.yaml',
                                 help='path to habitat dataset config file')
 
-        self.parser.add_argument('--root_path', type=str, dest='root_path', default="/")
+        self.parser.add_argument('--root_path', type=str, dest='root_path', default="/home/lzz/")
         self.parser.add_argument('--scenes_dir', type=str, dest='scenes_dir', default='habitat-lab/data/scene_datasets/')
         self.parser.add_argument('--episodes_save_dir', type=str, dest='episodes_save_dir', default="habitat-lab/data/datasets/pointnav/mp3d/v2/")
 
