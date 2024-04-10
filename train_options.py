@@ -34,7 +34,7 @@ class TrainOptions(BaseOptions):
                             help='Load options from json file instead of the command line')
 
         train = self.parser.add_argument_group('Training Options')
-        train.add_argument('--num_epochs', type=int, default=5,
+        train.add_argument('--num_epochs', type=int, default=20,
                            help='Total number of training epochs')
         train.add_argument('--batch_size', type=int, default=2, help='Batch size')
         train.add_argument('--test_batch_size', type=int, default=1, help='Batch size')
@@ -160,7 +160,8 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--stored_episodes_dir', type=str, dest='stored_episodes_dir', 
                                 # default='/home/lzz/habitat-lab/data/scene_datasets/mp3d_pointnav_episodes_tmp/')
                                 # default='/home/lzz/UPEN/logs/train_map_pred_0/')
-                                default='/home/lzz/habitat-lab/data/scene_datasets/mp3d_pointnav_episodes_tmp/')
+                                # default='/home/lzz/habitat-lab/data/scene_datasets/mp3d_pointnav_episodes_tmp/')
+                                default='/home/lzz/RACER/log/datasets/')
 
         
         self.parser.add_argument('--split', type=str, dest='split', default='val',

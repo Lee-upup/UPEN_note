@@ -88,7 +88,9 @@ def store_episodes(options, config_file, scene_id):
         scene_id = ex['scene_id']
         episode_id = ex['episode_id']
         abs_pose = ex['abs_pose']
+        # step_ego_grid_crops_spatial torch.Size([18, 3, 160, 160])
         step_ego_grid_crops_spatial = ex['step_ego_grid_crops_spatial'].cpu()
+        # gt_grid_crops_spatial torch.Size([18, 3, 160, 160])
         gt_grid_crops_spatial = ex['gt_grid_crops_spatial'].cpu()
 
         images = ex['images'].cpu()
@@ -97,7 +99,9 @@ def store_episodes(options, config_file, scene_id):
 
         if options.truncate_ep: # assumes that the maps were created only up to the desired step
             abs_pose = abs_pose[-options.episode_len:,:]
+            # step_ego_grid_crops_spatial torch.Size([10, 3, 160, 160]) 
             step_ego_grid_crops_spatial = step_ego_grid_crops_spatial[-options.episode_len:,:,:,:]
+            # gt_grid_crops_spatial torch.Size([10, 1, 160, 160]) 
             gt_grid_crops_spatial = gt_grid_crops_spatial[-options.episode_len:,:,:,:]
             images = images[-options.episode_len:,:,:,:]
             depth_imgs = depth_imgs[-options.episode_len:,:,:,:]

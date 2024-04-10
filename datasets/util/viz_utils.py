@@ -27,10 +27,10 @@ def colorize_grid(grid, color_mapping=3): # to pass into tensorboardX video
     grid_img = np.zeros((grid.shape[0], grid.shape[1], grid.shape[3], grid.shape[4], 3),  dtype=np.uint8)
     if grid.shape[2] > 1:
         # For cells where prob distribution is all zeroes (or uniform), argmax returns arbitrary number (can be true for the accumulated maps)
-        grid_prob_max = np.amax(grid, axis=2)
-        inds = np.asarray(grid_prob_max<=0.33).nonzero() # if no label has prob higher than k then assume unobserved
-        grid[inds[0], inds[1], 0, inds[2], inds[3]] = 1 # assign label 0 (void) to be the dominant label
-        grid = np.argmax(grid, axis=2) # B x T x grid_dim x grid_dim
+        grid_prob_max = np.amax(grid, axis=2) #沿axis=2寻找最大值，即三个类别中，概率最大的那个类别
+        inds = np.asarray(grid_prob_max<=0.33).nonzero() # 若概率最大不超过0.33，则认为该栅格没有被观测
+        grid[inds[0], inds[1], 0, inds[2], inds[3]] = 1 # 将没被观测到的格子 在第0个类别上的概率记为最大值1
+        grid = np.argmax(grid, axis=2) # B x T x grid_dim x grid_dim 寻找概率最大的类别，比如第0个类别的概率最大，就将格子里的值记为0
     else:
         grid = grid.squeeze(2)
 
